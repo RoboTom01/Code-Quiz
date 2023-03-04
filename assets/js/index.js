@@ -25,12 +25,18 @@ var widthValue = 0;
 
 start.addEventListener("click", runQuiz);
 
+function questionLoop() {
+
+
+
+};
+
 function runQuiz() {
   setTimeout(runQuiz, 75000);
-
+  questionLoop();
   
 
-}
+};
 
 
 
