@@ -141,7 +141,7 @@ next.onclick = ()=>{
     quizQuestion.innerHTML = questionTag; //adding new span tag inside que_tag
     quizList.innerHTML = optionTag; //adding new div tag inside option_tag
     
-    const option = option_list.querySelectorAll(".option");
+    const option = optionList.querySelectorAll(".option");
     // set onclick attribute to all available options
     for(i=0; i < option.length; i++){
         option[i].setAttribute("onclick", "optionSelected(this)");
