@@ -130,3 +130,20 @@ next.onclick = ()=>{
 
   // functions
 
+  function showQuetions(index){
+    // const que_text = document.querySelector(".que_text");
+    //creating a new span and div tag for question and option and passing the value using array index
+    let questionTag = '<span>'+ questions[index].numb + ". " + questions[index].question +'</span>';
+    let optionTag = '<div class="option"><span>'+ questions[index].options[0] +'</span></div>'
+    + '<div class="option"><span>'+ questions[index].options[1] +'</span></div>'
+    + '<div class="option"><span>'+ questions[index].options[2] +'</span></div>'
+    + '<div class="option"><span>'+ questions[index].options[3] +'</span></div>';
+    quizQuestion.innerHTML = questionTag; //adding new span tag inside que_tag
+    quizList.innerHTML = optionTag; //adding new div tag inside option_tag
+    
+    const option = option_list.querySelectorAll(".option");
+    // set onclick attribute to all available options
+    for(i=0; i < option.length; i++){
+        option[i].setAttribute("onclick", "optionSelected(this)");
+    }
+}
