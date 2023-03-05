@@ -92,6 +92,10 @@ display: none;
 
 /* id's */
 
+#answer-status {
+    text-decoration-color: grey;
+}
+
 #timer {
     font-weight: bold;
     display: flex;
