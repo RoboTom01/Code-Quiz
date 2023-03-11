@@ -1,3 +1,6 @@
+// https://www.youtube.com/watch?v=riDzcEQbX6k&ab_channel=WebDevSimplified
+
+
 // variables
 
 var startButton = document.getElementById('start-button');
@@ -7,6 +10,9 @@ var questionElement = document.getElementById('question');
 var answerButtonsElement = document.getElementById('answer-buttons');
 var timer = document.getElementById('timer');
 var answerStatus = document.getElementById('answer-status');
+var user = '';
+var userScore = 0;
+
 
 var questions = [
   {
@@ -57,7 +63,7 @@ var questions = [
 ]
 
 
-let shuffledQuestions, currentQuestionIndex
+let shuffledQuestions, currentQuestionIndex;
 
 // event listeners
 
@@ -114,18 +120,27 @@ function selectAnswer(e) {
   Array.from(answerButtonsElement.children).forEach(button => {
     setStatusClass(button, button.dataset.correct)
   })
+  if (correct) {
+    userScore = userScore +1;
+  }
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
+    var userScoreFinal = (100 * (userScore)) / 5;
+    user = prompt("Your score is " + userScoreFinal + "%! Please enter your name.")
+    console.log(user, userScoreFinal);
+    window.localStorage.setItem(user, userScoreFinal);
+    userScore = 0;
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
   }
 }
 
 function setStatusClass(element, correct) {
+
   clearStatusClass(element)
   if (correct) {
-    element.classList.add('correct')
+    element.classList.add('correct');
   } else {
     element.classList.add('wrong')
   }
@@ -135,3 +150,4 @@ function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
 }
+

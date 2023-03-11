@@ -21,17 +21,8 @@ width: 100vw;
 height: 100vh;
 justify-content: center;
 align-items: center;
-background-color: hsl(var(--hue), 100%, 20%);
+background-color: #A7ADC6;
 }
-
-body.correct {
---hue: var(--hue-correct);
-}
-
-body.wrong {
---hue: var(--hue-wrong);
-}
-
 
 /* classes */
 
