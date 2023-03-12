@@ -1,132 +1,157 @@
-// variables:
-  // from doc
-var start = document.getElementById("start");
-var quizDiv = document.getElementById("quiz_div");
-var timer = document.getElementById("timer");
-var timerSeconds = document.getElementById("timer_seconds");
-var quizQuestion = document.getElementById("quiz_question");
-var quizList = document.getElementById("quiz_list");
-var resultsDiv = document.getElementById("results_div");
-var completeMsg = document.getElementById("complete_msg");
-var score = document.getElementById("score");
-var restart = document.getElementById("restart");
-var next = document.getElementById("next");
-var totalQuestions = document.getElementById("total_questions");
+// https://www.youtube.com/watch?v=riDzcEQbX6k&ab_channel=WebDevSimplified
 
-  // for functions
-var timerTimeValue = 75;
-var questionCount = 0;
-var questionNumber = 1;
+
+// variables
+
+var startButton = document.getElementById('start-button');
+var nextButton = document.getElementById('next-button');
+var questionContainerElement = document.getElementById('question-container');
+var questionElement = document.getElementById('question');
+var answerButtonsElement = document.getElementById('answer-buttons');
+var timer = document.getElementById('timer');
+var answerStatus = document.getElementById('answer-status');
+var user = '';
 var userScore = 0;
-var counter;
-var counterLine;
-var widthValue = 0;
 
-  // Questions array:
-let questions = [
-    {
-    numb: 1,
-    question: " ?",
-    answer: "",
-    options: [
-      "",
-      "",
-      "",
-      ""
+
+var questions = [
+  {
+    question: 'How do you link the JS file to the HTML?',
+    answers: [
+      { text: 'Import in JS file.', correct: false },
+      { text: '<script src="...', correct: true },
+      { text: '<link href="...', correct: false },
+      { text: 'All of the above.', correct: false }
     ]
   },
-    {
-    numb: 2,
-    question: " ?",
-    answer: "",
-    options: [
-      "",
-      "",
-      "",
-      ""
+  {
+    question: ' ?',
+    answers: [
+      { text: '', correct: false },
+      { text: '', correct: true },
+      { text: '', correct: false },
+      { text: '', correct: false }
     ]
   },
-    {
-    numb: 3,
-    question: " ?",
-    answer: "",
-    options: [
-      "",
-      "",
-      "",
-      ""
+  {
+    question: ' ?',
+    answers: [
+      { text: '', correct: false },
+      { text: '', correct: true },
+      { text: '', correct: false },
+      { text: '', correct: false }
     ]
   },
-    {
-    numb: 4,
-    question: " ?",
-    answer: "",
-    options: [
-      "",
-      "",
-      "",
-      ""
+  {
+    question: ' ?',
+    answers: [
+      { text: '', correct: false },
+      { text: '', correct: true },
+      { text: '', correct: false },
+      { text: '', correct: false }
     ]
   },
-    {
-    numb: 5,
-    question: " ?",
-    answer: "",
-    options: [
-      "",
-      "",
-      "",
-      ""
+  {
+    question: ' ?',
+    answers: [
+      { text: '', correct: false },
+      { text: '', correct: true },
+      { text: '', correct: false },
+      { text: '', correct: false }
     ]
-  },
-
-];
-
+  }
+]
 
 
-  // listeners
+let shuffledQuestions, currentQuestionIndex;
 
-start.onclick = ()=>{
-  quizDiv.classList.add("activeInfo");
+// event listeners
+
+startButton.addEventListener('click', startGame)
+nextButton.addEventListener('click', () => {
+  currentQuestionIndex++
+  setNextQuestion()
+})
+
+
+
+// functions
+
+
+function startGame() {
+  startButton.classList.add('hide')
+  shuffledQuestions = questions.sort(() => Math.random() - .5)
+  currentQuestionIndex = 0
+  questionContainerElement.classList.remove('hide')
+  timer.classList.remove('hide')
+  timer.classList.add('flex')
+  setNextQuestion()
+  // function startTimer()
 }
 
-restart.onclick = ()=>{
-  quizDiv.classList.add("activeQuiz"); //show quiz box
-  resultsDiv.classList.remove("activeResult"); //hide result box
-  timerTimeValue = 15; 
-  questionCount = 0;
-  questionNumber = 1;
-  userScore = 0;
-  widthValue = 0;
-  showQuetions(questionCount); //calling showQestions function
-  questionCounter(questionNumber); //passing que_numb value to queCounter
-  clearInterval(counter); //clear counter
-  clearInterval(counterLine); //clear counterLine
-  startTimer(timerTimeValue); //calling startTimer function
-  startTimerLine(widthValue); //calling startTimerLine function
-  timerSeconds.textContent = "Time Left"; //change the text of timeText to Time Left
+function setNextQuestion() {
+  resetState()
+  showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
-next.onclick = ()=>{
-  if(questionCount < questions.length - 1){ //if question count is less than total question length
-      questionCount++; //increment the que_count value
-      questionNumber++; //increment the que_numb value
-      showQuetions(questionCount); //calling showQestions function
-      questionCounter(questionNumber); //passing que_numb value to queCounter
-      clearInterval(counter); //clear counter
-      clearInterval(counterLine); //clear counterLine
-      startTimer(timerTimeValue); //calling startTimer function
-      startTimerLine(widthValue); //calling startTimerLine function
-      timerSeconds.textContent = "Time Left"; //change the timeText to Time Left
-      next.classList.remove("show"); //hide the next button
-  }else{
-      clearInterval(counter); //clear counter
-      clearInterval(counterLine); //clear counterLine
-      showResult(); //calling showResult function
+function showQuestion(question) {
+  questionElement.innerText = question.question
+  question.answers.forEach(answer => {
+    const button = document.createElement('button')
+    button.innerText = answer.text
+    button.classList.add('button')
+    if (answer.correct) {
+      button.dataset.correct = answer.correct
+    }
+    button.addEventListener('click', selectAnswer)
+    answerButtonsElement.appendChild(button)
+  })
+}
+
+function resetState() {
+  clearStatusClass(document.body)
+  nextButton.classList.add('hide')
+  while (answerButtonsElement.firstChild) {
+    answerButtonsElement.removeChild(answerButtonsElement.firstChild)
   }
 }
 
+function selectAnswer(e) {
+  const selectedButton = e.target
+  const correct = selectedButton.dataset.correct
+  setStatusClass(document.body, correct)
+  Array.from(answerButtonsElement.children).forEach(button => {
+    setStatusClass(button, button.dataset.correct)
+  })
+  if (correct) {
+    userScore = userScore +1;
+  }
+  // add else to remove 10 seconds
+  if (shuffledQuestions.length > currentQuestionIndex + 1) {
+    nextButton.classList.remove('hide')
+  } else {
+    var userScoreFinal = (100 * (userScore)) / 5;
+    user = prompt("Your score is " + userScoreFinal + "%! Please enter your name.")
+    console.log(user, userScoreFinal);
+    window.localStorage.setItem(user, userScoreFinal);
+    userScore = 0;
+    startButton.innerText = 'Restart'
+    startButton.classList.remove('hide')
+  }
+}
 
+function setStatusClass(element, correct) {
 
-  // functions
+  clearStatusClass(element)
+  if (correct) {
+    element.classList.add('correct');
+  } else {
+    element.classList.add('wrong')
+  }
+}
+
+function clearStatusClass(element) {
+  element.classList.remove('correct')
+  element.classList.remove('wrong')
+}
 
