@@ -77,13 +77,16 @@ nextButton.addEventListener('click', () => {
 
 // functions
 
+
 function startGame() {
   startButton.classList.add('hide')
   shuffledQuestions = questions.sort(() => Math.random() - .5)
   currentQuestionIndex = 0
   questionContainerElement.classList.remove('hide')
   timer.classList.remove('hide')
+  timer.classList.add('flex')
   setNextQuestion()
+  // function startTimer()
 }
 
 function setNextQuestion() {
@@ -123,6 +126,7 @@ function selectAnswer(e) {
   if (correct) {
     userScore = userScore +1;
   }
+  // add else to remove 10 seconds
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
