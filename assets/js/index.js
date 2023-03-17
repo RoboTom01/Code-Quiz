@@ -83,7 +83,7 @@ nextButton.addEventListener('click', () => {
   currentQuestionIndex++
   setNextQuestion()
 })
-submitButton.addEventListener('click', saveScore)
+// submitButton.addEventListener('click', saveScore)
 
 
 // functions
@@ -119,7 +119,7 @@ function renderPageLoad() {
 function startGame() {
   startButton.classList.add('hide')
   scoreCard.classList.add('hide')
-  submitButton.classList.add('hide')
+  // submitButton.classList.add('hide')
   highscoreEl.classList.add('hide')
   shuffledQuestions = questions.sort(() => Math.random() - .5)
   currentQuestionIndex = 0
@@ -188,7 +188,7 @@ function selectAnswer(e) {
     timer.classList.remove('flex')
     timer.classList.add('hide')
     scoreCard.classList.remove('hide')
-    submitButton.classList.remove('hide')
+    // submitButton.classList.remove('hide')
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
     userScoreFinal = (100 * (userScore)) / 5;
@@ -203,6 +203,7 @@ function selectAnswer(e) {
       }
     scoreCard.textContent = "Thank you " + user + "! You got a " + userScoreFinal + "% score!";
     console.log(user, userScoreFinal);
+    saveScore(e)
   }
 }
 
@@ -232,6 +233,6 @@ function saveScore(e) {
   };
   storedUsers.push(newScore);
   window.localStorage.setItem("highscores", JSON.stringify(newScore));
-  window.location.href = "highscores.html";
+  // window.location.href = "highscores.html";
   console.log("Saved!")
 }
