@@ -19,6 +19,7 @@ body {
     width: 100vw;
     height: 100vh;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    text-decoration-color: black;
     justify-content: center;
     align-items: center;
     background-color: #A7ADC6;
@@ -27,6 +28,10 @@ body {
 h2 {
     margin-top: 0;
     text-align: center;
+}
+
+li {
+    font-weight: bold;
 }
 
 /* classes */
@@ -61,7 +66,7 @@ h2 {
     gap: 10px;
     margin: 20px 0;
     }
-    
+
 .container {
     width: 800px;
     max-width: 80%;
@@ -89,7 +94,7 @@ h2 {
     text-decoration-color: red;
 }
 
-.start-button, .next-button {
+.start-button, .next-button, .submit-button, .back {
     font-size: 1.5rem;
     font-weight: bold;
     padding: 10px 20px;
@@ -101,8 +106,14 @@ h2 {
     text-decoration-color: grey;
 }
 
+#score-card {
+    font-weight: bold;
+    text-align: center;
+}
+
 #score-container {
     text-align: center;
+    display: flex;
 }
 
 #timer {

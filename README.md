@@ -1,2 +1,14 @@
 # Code-Quiz
-Module 4: HTML, CSS, JS Code Quiz Assignment
+
+## Quick Coding Quiz
+A simple quiz page that adapts to the user's input. 
+
+The quiz is a set of 5 question with a 70 second timer.
+
+Upon completeing the quiz, the user can input their Initials to save their score locally.
+
+Reactions include:
+* Timer being decreased.
+* Right/Wrong answers being colored when scored.
+* Score message at the end.
+

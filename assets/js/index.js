@@ -1,10 +1,8 @@
-// https://www.youtube.com/watch?v=riDzcEQbX6k&ab_channel=WebDevSimplified
-
-
 // variables
 
 var startButton = document.getElementById('start-button');
 var nextButton = document.getElementById('next-button');
+var submitButton = document.getElementById('submit-button');
 var questionContainerElement = document.getElementById('question-container');
 var questionElement = document.getElementById('question');
 var answerButtonsElement = document.getElementById('answer-buttons');
@@ -13,11 +11,21 @@ var timerSeconds = document.getElementById('time-seconds');
 var answerStatus = document.getElementById('answer-status');
 var header = document.getElementById('header');
 var scoreContainer = document.getElementById('score-container');
-var scoreCard = document.getElementById('score-Card');
+var scoreCard = document.getElementById('score-card');
+var userEl = document.getElementById('user');
+var scoreEl = document.getElementById('score');
+var highscoreEl = document.getElementById('highscores-link');
 var timeLeft;
 var userScore;
+var userScoreFinal;
 var user = '';
 
+
+let timerID;
+let shuffledQuestions, currentQuestionIndex;
+let timeInterval;
+
+let storedUsers = []
 
 var questions = [
   {
@@ -67,8 +75,6 @@ var questions = [
   }
 ]
 
-let timerID;
-let shuffledQuestions, currentQuestionIndex;
 
 // event listeners
 
@@ -77,50 +83,63 @@ nextButton.addEventListener('click', () => {
   currentQuestionIndex++
   setNextQuestion()
 })
-
+submitButton.addEventListener('click', saveScore)
 
 
 // functions
 
+
+  // timer
 function countdown() {
-  let timeInterval = setInterval(function () {
-    timerSeconds.textContent = timeLeft;
+timeInterval = setInterval(function () {
+    timerSeconds.textContent = timeLeft - 1;
     timeLeft--;
-    if (timeLeft === 0) {
-      timerSeconds.textContent = '';
+    if (timeLeft <= 0) {
+      timerSeconds.textContent = '0';
       clearInterval(timeInterval);
-      displayMessage();
+      alert("Time is up! Try again.")
+      questionContainerElement.classList.add('hide')
+      nextButton.classList.add('hide')
       startButton.innerText = 'Restart'
       startButton.classList.remove('hide')
     }
   }, 1000);
 }
 
+function renderPageLoad() {
+  if (JSON.parse(localStorage.getItem("highscores")) === null) {
+    storedUsers = [];
+  } else {
+  storedUsers = JSON.parse(localStorage.getItem("highscores"));
+  }
+  console.log(storedUsers);
+}
+
+  // start the quiz
 function startGame() {
   startButton.classList.add('hide')
+  scoreCard.classList.add('hide')
+  submitButton.classList.add('hide')
+  highscoreEl.classList.add('hide')
   shuffledQuestions = questions.sort(() => Math.random() - .5)
   currentQuestionIndex = 0
   questionContainerElement.classList.remove('hide')
   header.classList.add('hide')
   timer.classList.remove('hide')
   timer.classList.add('flex')
-  timeLeft = 30
+  timeLeft = 71
   userScore = 0
   setNextQuestion()
   countdown()
 }
 
-//   alert.window("Time is up!")
-//   startButton.innerText = 'Restart'
-//   nextButton.classList.add('hide')
-//   startButton.classList.remove('hide')
-
-
+  // pick next question in shuffled array
 function setNextQuestion() {
   resetState()
   showQuestion(shuffledQuestions[currentQuestionIndex])
 }
 
+  // displays next question in array, and lets an answer be selected
 function showQuestion(question) {
   questionElement.innerText = question.question
   question.answers.forEach(answer => {
@@ -135,6 +154,7 @@ function showQuestion(question) {
   })
 }
 
+  // resets box for next question
 function resetState() {
   clearStatusClass(document.body)
   nextButton.classList.add('hide')
@@ -143,6 +163,7 @@ function resetState() {
   }
 }
 
+  // answer selection > process of concluding quix when there are no more questions.
 function selectAnswer(e) {
   const selectedButton = e.target
   const correct = selectedButton.dataset.correct
@@ -152,32 +173,41 @@ function selectAnswer(e) {
   })
   if (correct) {
     userScore = userScore +1;
-
   } else {
     timeLeft -=10;
     timerSeconds.classList.add('red-text')
     answerStatus.classList.remove('hide')
   }
-  // add else to remove 10 seconds
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
+    clearInterval(timeInterval);
+    answerStatus.classList.add('hide')
     questionContainerElement.classList.add('hide')
-    var userScoreFinal = (100 * (userScore)) / 5;
-    user = prompt("Your score is " + userScoreFinal + "%! Please enter your name.")
-    console.log(user, userScoreFinal);
-    window.localStorage.setItem(user, userScoreFinal);
+    highscoreEl.classList.remove('hide')
     timer.classList.remove('flex')
     timer.classList.add('hide')
-    scoreContainer.classList.remove('hide')
-    // scoreCard.textContent = "Thank you " + user + "! You got a " + userScoreFinal + "% score!"
+    scoreCard.classList.remove('hide')
+    submitButton.classList.remove('hide')
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
+    userScoreFinal = (100 * (userScore)) / 5;
+    user = prompt("Your score is " + userScoreFinal + "%! Please enter your initials. (Hit cancel to not save.)")
+      if (user.length > 2) {
+        alert("Please enter a 2 letter set of initials.")
+        user = prompt("Your score is " + userScoreFinal + "%! Please enter your initials.")
+      }
+      if (user.length < 2) {
+        alert("Please enter a 2 letter set of initials.")
+        user = prompt("Your score is " + userScoreFinal + "%! Please enter your initials.")
+      }
+    scoreCard.textContent = "Thank you " + user + "! You got a " + userScoreFinal + "% score!";
+    console.log(user, userScoreFinal);
   }
 }
 
+  // recognize input as right/wrong to effect page view
 function setStatusClass(element, correct) {
-
   clearStatusClass(element)
   if (correct) {
     element.classList.add('correct');
@@ -186,10 +216,22 @@ function setStatusClass(element, correct) {
   }
 }
 
+  // resets right/wrong status
 function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
   answerStatus.classList.add('hide')
 }
 
-
+// save scores locally
+function saveScore(e) {
+  e.preventDefault();
+  newScore = {
+    user: user,
+    score: userScoreFinal,
+  };
+  storedUsers.push(newScore);
+  window.localStorage.setItem("highscores", JSON.stringify(newScore));
+  window.location.href = "highscores.html";
+  console.log("Saved!")
+}
