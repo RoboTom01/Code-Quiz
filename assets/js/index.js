@@ -12,9 +12,11 @@ var timer = document.getElementById('timer');
 var timerSeconds = document.getElementById('time-seconds');
 var answerStatus = document.getElementById('answer-status');
 var header = document.getElementById('header');
-var timeLeft = '';
+var scoreContainer = document.getElementById('score-container');
+var scoreCard = document.getElementById('score-Card');
+var timeLeft;
+var userScore;
 var user = '';
-var userScore = 0;
 
 
 var questions = [
@@ -81,11 +83,10 @@ nextButton.addEventListener('click', () => {
 // functions
 
 function countdown() {
-  var timeInterval = setInterval(function () {
-    if (timeLeft >= 1) {
-      timerSeconds.textContent = timeLeft;
-      timeLeft--;
-    } else {
+  let timeInterval = setInterval(function () {
+    timerSeconds.textContent = timeLeft;
+    timeLeft--;
+    if (timeLeft === 0) {
       timerSeconds.textContent = '';
       clearInterval(timeInterval);
       displayMessage();
@@ -103,13 +104,15 @@ function startGame() {
   header.classList.add('hide')
   timer.classList.remove('hide')
   timer.classList.add('flex')
-  timeLeft = 70
+  timeLeft = 30
+  userScore = 0
   setNextQuestion()
   countdown()
 }
 
-
+//   alert.window("Time is up!")
 //   startButton.innerText = 'Restart'
+//   nextButton.classList.add('hide')
 //   startButton.classList.remove('hide')
 
 
@@ -149,18 +152,25 @@ function selectAnswer(e) {
   })
   if (correct) {
     userScore = userScore +1;
+
   } else {
-    // timeLeft = -1;
+    timeLeft -=10;
+    timerSeconds.classList.add('red-text')
+    answerStatus.classList.remove('hide')
   }
   // add else to remove 10 seconds
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
+    questionContainerElement.classList.add('hide')
     var userScoreFinal = (100 * (userScore)) / 5;
     user = prompt("Your score is " + userScoreFinal + "%! Please enter your name.")
     console.log(user, userScoreFinal);
     window.localStorage.setItem(user, userScoreFinal);
-    userScore = 0;
+    timer.classList.remove('flex')
+    timer.classList.add('hide')
+    scoreContainer.classList.remove('hide')
+    // scoreCard.textContent = "Thank you " + user + "! You got a " + userScoreFinal + "% score!"
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
   }
@@ -179,6 +189,7 @@ function setStatusClass(element, correct) {
 function clearStatusClass(element) {
   element.classList.remove('correct')
   element.classList.remove('wrong')
+  answerStatus.classList.add('hide')
 }
 
 

@@ -85,6 +85,10 @@ h2 {
     display: none;
     }
 
+.red-text {
+    text-decoration-color: red;
+}
+
 .start-button, .next-button {
     font-size: 1.5rem;
     font-weight: bold;
