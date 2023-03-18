@@ -1,4 +1,4 @@
-let highscores = document.getElementById("highscores");
+var highscores = document.getElementById("highscores");
 
 function retrieveScores() {
     let storedUsers = JSON.parse(localStorage.getItem("highscores"));
@@ -6,7 +6,7 @@ function retrieveScores() {
     for (let i = 0; i < storedUsers.length; i++) {
       let scoresDiv = document.createElement("div");
       scoresDiv.innerHTML = 
-        "User: " + storedUsers[i].user + " Score: " + storedUsers[i].userScoreFinal + "%";
+        "User: " + storedUsers[i].userInitials + " Score: " + storedUsers[i].score + "%";
         scoresDiv.style.fontSize = "25px";
         highscores.append(scoresDiv);
     }

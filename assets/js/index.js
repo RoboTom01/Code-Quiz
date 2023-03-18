@@ -1,4 +1,4 @@
-// variables
+// * variables
 
 var startButton = document.getElementById('start-button');
 var nextButton = document.getElementById('next-button');
@@ -38,55 +38,53 @@ var questions = [
     ]
   },
   {
-    question: ' ?',
+    question: 'What data type(s) does JS support?',
     answers: [
-      { text: '', correct: false },
-      { text: '', correct: true },
-      { text: '', correct: false },
-      { text: '', correct: false }
+      { text: 'Boolean', correct: false },
+      { text: 'String', correct: false },
+      { text: 'Object', correct: false },
+      { text: 'All of the above.', correct: true }
     ]
   },
   {
-    question: ' ?',
+    question: 'How would you count the number of characters in a strong?',
     answers: [
-      { text: '', correct: false },
-      { text: '', correct: true },
-      { text: '', correct: false },
-      { text: '', correct: false }
+      { text: 'length()', correct: true },
+      { text: 'numberOfChar()', correct: false },
+      { text: 'characterCount()', correct: false },
+      { text: 'characterLength()', correct: false }
     ]
   },
   {
-    question: ' ?',
+    question: '*var = "Hello World"* What is the order count for the letter "e" in the var?',
     answers: [
-      { text: '', correct: false },
-      { text: '', correct: true },
-      { text: '', correct: false },
-      { text: '', correct: false }
+      { text: '2', correct: false },
+      { text: '1', correct: true }
     ]
   },
   {
-    question: ' ?',
+    question: 'Which of these is NOT a data type in JS?',
     answers: [
-      { text: '', correct: false },
-      { text: '', correct: true },
-      { text: '', correct: false },
-      { text: '', correct: false }
+      { text: 'object', correct: false },
+      { text: 'container', correct: true },
+      { text: 'array', correct: false },
+      { text: 'All of the above.', correct: false }
     ]
   }
 ]
 
 
-// event listeners
+// * event listeners
 
 startButton.addEventListener('click', startGame)
 nextButton.addEventListener('click', () => {
   currentQuestionIndex++
   setNextQuestion()
 })
-// submitButton.addEventListener('click', saveScore)
 
 
-// functions
+
+// * functions
 
 
   // timer
@@ -106,6 +104,7 @@ timeInterval = setInterval(function () {
   }, 1000);
 }
 
+  // render to check JSON and local
 function renderPageLoad() {
   if (JSON.parse(localStorage.getItem("highscores")) === null) {
     storedUsers = [];
@@ -119,7 +118,6 @@ function renderPageLoad() {
 function startGame() {
   startButton.classList.add('hide')
   scoreCard.classList.add('hide')
-  // submitButton.classList.add('hide')
   highscoreEl.classList.add('hide')
   shuffledQuestions = questions.sort(() => Math.random() - .5)
   currentQuestionIndex = 0
@@ -172,8 +170,10 @@ function selectAnswer(e) {
     setStatusClass(button, button.dataset.correct)
   })
   if (correct) {
+      // score increase for correct answer
     userScore = userScore +1;
   } else {
+      // time lost for wrong answer
     timeLeft -=10;
     timerSeconds.classList.add('red-text')
     answerStatus.classList.remove('hide')
@@ -181,6 +181,7 @@ function selectAnswer(e) {
   if (shuffledQuestions.length > currentQuestionIndex + 1) {
     nextButton.classList.remove('hide')
   } else {
+      // ends quiz, finalizes score, allows user to input initials
     clearInterval(timeInterval);
     answerStatus.classList.add('hide')
     questionContainerElement.classList.add('hide')
@@ -188,7 +189,6 @@ function selectAnswer(e) {
     timer.classList.remove('flex')
     timer.classList.add('hide')
     scoreCard.classList.remove('hide')
-    // submitButton.classList.remove('hide')
     startButton.innerText = 'Restart'
     startButton.classList.remove('hide')
     userScoreFinal = (100 * (userScore)) / 5;
@@ -228,9 +228,10 @@ function clearStatusClass(element) {
 function saveScore(e) {
   e.preventDefault();
   newScore = {
-    user: user,
+    userInitials: user,
     score: userScoreFinal,
   };
+  // storedUsers = JSON.parse(localStorage.getItem("highscores"));
   storedUsers.push(newScore);
   window.localStorage.setItem("highscores", JSON.stringify(newScore));
   // window.location.href = "highscores.html";
