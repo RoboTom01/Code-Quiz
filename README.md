@@ -12,4 +12,4 @@ Reactions include:
 * Right/Wrong answers being colored when scored.
 * Score message at the end.
 
-![Example](https://github.com/Code-Quiz/quizexample.gif)
+![Example](https://github.com/Code-Quiz/assets/css/images/quizexample.gif)
